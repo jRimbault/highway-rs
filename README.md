@@ -181,3 +181,9 @@ RUSTFLAGS="-C target-feature=-avx2" cargo bench -- highway-builder
 RUSTFLAGS="-C target-cpu=native -C target-feature=+sse4.1,-avx2" \
   cargo bench -- highway-builder
 ```
+
+*Usable in no_std context*
+
+```
+highway = { version = "...", default-features = false }
+```
