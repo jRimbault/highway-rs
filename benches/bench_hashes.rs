@@ -1,7 +1,7 @@
 use blake2::Blake2s;
 use blake2b_simd::Params;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 use highway::{AvxHash, SseHash};
 use highway::{HighwayBuilder, HighwayHash, Key, PortableHash};
 use sha2::{Digest, Sha256};
@@ -73,7 +73,7 @@ fn bit64_hash(c: &mut Criterion) {
             b.iter(|| t1ha::t1ha0(&data, 1234))
         });
 
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             if AvxHash::new(key).is_some() {
                 group.bench_with_input(BenchmarkId::new("avx", i), i, |b, param| {
@@ -134,7 +134,7 @@ fn bit256_hash(c: &mut Criterion) {
             })
         });
 
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             if AvxHash::new(key).is_some() {
                 group.bench_with_input(BenchmarkId::new("avx", i), i, |b, param| {

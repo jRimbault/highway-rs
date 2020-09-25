@@ -59,7 +59,7 @@ mod quick_tests {
         let hash2 = HighwayBuilder::new(key).hash64(data.as_slice());
         let mut res = hash1 == hash2;
 
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             use highway::{AvxHash, SseHash};
             if let Some(h) = AvxHash::new(key) {
@@ -81,7 +81,7 @@ mod quick_tests {
         let hash2 = HighwayBuilder::new(key).hash128(data.as_slice());
         let mut res = hash1 == hash2;
 
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             use highway::{AvxHash, SseHash};
             if let Some(h) = AvxHash::new(key) {
@@ -103,7 +103,7 @@ mod quick_tests {
         let hash2 = HighwayBuilder::new(key).hash256(data.as_slice());
         let mut res = hash1 == hash2;
 
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             use highway::{AvxHash, SseHash};
             if let Some(h) = AvxHash::new(key) {
@@ -119,7 +119,7 @@ mod quick_tests {
     }
 }
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 mod quick_simd_tests {
     use highway::{AvxHash, HighwayHash, Key, SseHash};
 

@@ -3,17 +3,17 @@ use crate::portable::PortableHash;
 use crate::traits::HighwayHash;
 use std::default::Default;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 use crate::avx::AvxHash;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 use crate::sse::SseHash;
 
 #[derive(Debug, Clone)]
 enum HighwayChoices {
     Portable(PortableHash),
-    #[cfg(target_arch = "x86_64")]
+    #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
     Sse(SseHash),
-    #[cfg(target_arch = "x86_64")]
+    #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
     Avx(AvxHash),
 }
 
@@ -32,9 +32,9 @@ impl HighwayHash for HighwayBuilder {
     fn hash64(self, data: &[u8]) -> u64 {
         match self.0 {
             HighwayChoices::Portable(x) => x.hash64(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.hash64(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.hash64(data),
         }
     }
@@ -42,9 +42,9 @@ impl HighwayHash for HighwayBuilder {
     fn hash128(self, data: &[u8]) -> [u64; 2] {
         match self.0 {
             HighwayChoices::Portable(x) => x.hash128(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.hash128(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.hash128(data),
         }
     }
@@ -52,9 +52,9 @@ impl HighwayHash for HighwayBuilder {
     fn hash256(self, data: &[u8]) -> [u64; 4] {
         match self.0 {
             HighwayChoices::Portable(x) => x.hash256(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.hash256(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.hash256(data),
         }
     }
@@ -62,9 +62,9 @@ impl HighwayHash for HighwayBuilder {
     fn append(&mut self, data: &[u8]) {
         match &mut self.0 {
             HighwayChoices::Portable(x) => x.append(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.append(data),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.append(data),
         }
     }
@@ -72,9 +72,9 @@ impl HighwayHash for HighwayBuilder {
     fn finalize64(self) -> u64 {
         match self.0 {
             HighwayChoices::Portable(x) => x.finalize64(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.finalize64(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.finalize64(),
         }
     }
@@ -82,9 +82,9 @@ impl HighwayHash for HighwayBuilder {
     fn finalize128(self) -> [u64; 2] {
         match self.0 {
             HighwayChoices::Portable(x) => x.finalize128(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.finalize128(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.finalize128(),
         }
     }
@@ -92,9 +92,9 @@ impl HighwayHash for HighwayBuilder {
     fn finalize256(self) -> [u64; 4] {
         match self.0 {
             HighwayChoices::Portable(x) => x.finalize256(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Avx(x) => x.finalize256(),
-            #[cfg(target_arch = "x86_64")]
+            #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
             HighwayChoices::Sse(x) => x.finalize256(),
         }
     }
@@ -103,7 +103,7 @@ impl HighwayHash for HighwayBuilder {
 impl HighwayBuilder {
     /// Creates a new hasher based on compilation and runtime capabilities
     pub fn new(key: Key) -> Self {
-        #[cfg(target_arch = "x86_64")]
+        #[cfg(all(target_arch = "x86_64", feature = "use_std"))]
         {
             if let Some(h) = AvxHash::new(key) {
                 return HighwayBuilder(HighwayChoices::Avx(h));

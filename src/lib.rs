@@ -100,6 +100,10 @@ assert_eq!(map.get(&1), Some(&2));
 ```
 */
 #![allow(non_snake_case)]
+#![cfg_attr(all(not(test), not(feature = "use_std")), no_std)]
+
+#[cfg(all(not(test), not(feature = "use_std")))]
+extern crate core as std;
 
 #[macro_use]
 mod macros;
@@ -116,18 +120,18 @@ pub use crate::key::Key;
 pub use crate::portable::PortableHash;
 pub use crate::traits::HighwayHash;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 mod avx;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 mod sse;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 mod v2x64u;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 mod v4x64u;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 pub use crate::avx::AvxHash;
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 pub use crate::sse::SseHash;
 
 #[cfg(doctest)]

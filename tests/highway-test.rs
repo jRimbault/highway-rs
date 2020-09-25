@@ -475,8 +475,8 @@ fn u64_to_u256(data: &[u64]) -> (u128, u128) {
     (u64_to_u128(data), u64_to_u128(&data[2..]))
 }
 
-#[cfg(target_arch = "x86_64")]
 #[test]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 fn sse_hash_eq_portable() {
     use highway::SseHash;
 
@@ -512,7 +512,7 @@ fn sse_hash_eq_portable() {
 }
 
 #[test]
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 fn avx_hash_eq_portable() {
     use highway::AvxHash;
     if !is_x86_feature_detected!("avx2") {
@@ -554,7 +554,7 @@ fn portable_survive_crash() {
 }
 
 #[test]
-#[cfg(target_arch = "x86_64")]
+#[cfg(all(target_arch = "x86_64", feature = "use_std"))]
 fn avx_survive_crash() {
     use highway::AvxHash;
     if !is_x86_feature_detected!("avx2") {

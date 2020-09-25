@@ -10,6 +10,10 @@ description = "Native Rust port of Google's HighwayHash, which makes use of SIMD
 keywords = ["HighwayHash", "hash", "simd", "avx"]
 edition = "2018"
 
+[features]
+default = ["use_std"]
+use_std = []
+
 [dev-dependencies]
 criterion = "0.3.0"
 sha2 = "0.9.0"
